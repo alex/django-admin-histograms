@@ -11,7 +11,9 @@
 			{% for num in data %}
 				<li>
 					<a href="#" title="{{ num }}">
-						<span class="label">{{ forloop.counter }}</span>
+						{% if day_labels %}
+							<span class="label">{{ forloop.counter }}</span>
+						{% endif %}
 						<span class="count" style="height: {% widthratio num total 100 %}%">
 							({{ num }})
 						</span>

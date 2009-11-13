@@ -59,14 +59,16 @@ HISTOGRAM_CSS = """
 }"""
 
 class Histogram(object):
-    def __init__(self, model, attname, queryset=None):
+    def __init__(self, model, attname, queryset=None, months=2):
         # `queryset` exists so it can work with the admin (bad idea?)
         self.model = model
         self.attname = attname
         self._queryset = None
+        self.months = months
     
-    def render(self, css=False):
+    def render(self, css=False, day_labels=True):
         context = self.get_report()
+        context['day_labels'] = day_labels
         if css:
             context['css'] = HISTOGRAM_CSS
         return render_to_string("histograms/report.html", context)
@@ -78,30 +80,29 @@ class Histogram(object):
         return mark_safe(HISTOGRAM_CSS)
     
     def get_report(self):
+        # XXX: this logic can probably be cleaned up
         this_month = datetime.date.today().replace(day=1)
-        last_month = (this_month - datetime.timedelta(days=1)).replace(day=1)
+        last_month = this_month
+        months = {}
+        for m in range(0, self.months):
+            cur_month = last_month
+            months['%s.%s' % (last_month.month, last_month.year)] = [
+                last_month,
+                ([0] * calendar.monthrange(last_month.year, last_month.month)[1]),
+                0
+            ]
+            last_month = (last_month - datetime.timedelta(days=1)).replace(day=1)
+        
         qs = self.get_query_set().values(self.attname).annotate(
             num=Count("pk")
-        ).filter(**{"%s__gt" % self.attname: last_month})
-        
-        months = [
-            [this_month, ([0] * calendar.monthrange(this_month.year, this_month.month)[1]), 0],
-            [last_month, ([0] * calendar.monthrange(last_month.year, last_month.month)[1]), 0],
-        ]
+        ).filter(**{"%s__gt" % self.attname: cur_month})
         
         for data in qs.iterator():
-            if (this_month.month == data[self.attname].month and
-                this_month.year == data[self.attname].year):
-                idx = 0
-            elif (last_month.month == data[self.attname].month and
-                last_month.year == data[self.attname].year):
-                idx = 1
-            else:
-                continue
+            idx = '%s.%s' % (data[self.attname].month, data[self.attname].year)
             months[idx][1][data[self.attname].day-1] += data["num"]
             months[idx][2] += data["num"]
         
         return {
-            "results": months,
-            "total": sum(o for m in months for o in m[1]),
+            "results": months.values(),
+            "total": sum(o for m in months.itervalues() for o in m[1]),
         }

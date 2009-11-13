@@ -4,10 +4,10 @@ from django.db.models import get_model
 
 register = template.Library()
 
-def histogram_for(model, attname):
+def histogram_for(model, attname, months=2, day_labels=True):
     if isinstance(model, basestring):
         model = get_model(*model.split('.'))
-    return Histogram(model, str(attname)).render(css=True)
+    return Histogram(model, str(attname), months=months).render(css=True, day_labels=day_labels)
 register.simple_tag(histogram_for)
 
 # try:
