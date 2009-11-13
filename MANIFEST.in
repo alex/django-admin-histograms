@@ -1,0 +1,3 @@
+include setup.py README CONTRIBUTORS LICENSE MANIFEST.in
+recursive-include django_histograms/templates *
+global-exclude *~
