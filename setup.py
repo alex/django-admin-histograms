@@ -1,5 +1,4 @@
-from distutils.core import setup
- 
+from setuptools import setup, find_packages
  
 setup(
     name = "django-admin-histograms",
@@ -10,9 +9,7 @@ setup(
     long_description = open("README").read(),
     license = "BSD",
     url = "http://github.com/alex/django-admin-histograms",
-    packages = [
-        "django_histograms",
-    ],
+    packages=find_packages(),
     classifiers = [
         "Development Status :: 3 - Alpha",
         "Environment :: Web Environment",
