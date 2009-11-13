@@ -1,0 +1,17 @@
+{% for month, data in results %}
+	<div class="histogram">
+		<h2 style="padding-top: 1em;">{{ month|date:"F Y" }}</h2>
+		<ul>
+			{% for num in data %}
+				<li>
+					<a href="#" title="{{ num }}">
+						<span class="label">{{ forloop.counter }}</span>
+						<span class="count" style="height: {% widthratio num total 100 %}%">
+							({{ num }})
+						</span>
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+{% endfor %}
