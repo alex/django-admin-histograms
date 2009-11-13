@@ -6,7 +6,7 @@ setup(
     author = "Alex Gaynor",
     author_email = "alex.gaynor@gmail.com",
     description = "A library for simple histograms in Django's admin.",
-    long_description = open("README").read(),
+    long_description = open("README.rst").read(),
     license = "BSD",
     url = "http://github.com/alex/django-admin-histograms",
     packages=find_packages(),

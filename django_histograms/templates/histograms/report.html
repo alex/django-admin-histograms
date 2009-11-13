@@ -3,6 +3,7 @@
 	{{ css }}
 	</style>
 {% endif %}
+<p>During this time period there were {{ total }} entries.</p>
 {% for month, data in results %}
 	<div class="histogram">
 		<h2 style="padding-top: 1em;">{{ month|date:"F Y" }}</h2>
