@@ -69,7 +69,7 @@ class Histogram(object):
         context = self.get_report()
         if css:
             context['css'] = HISTOGRAM_CSS
-        return render_to_string("histogram/report.html", context)
+        return render_to_string("histograms/report.html", context)
     
     def get_query_set(self):
         return self._queryset or self.model.objects.all()
@@ -85,8 +85,8 @@ class Histogram(object):
         ).filter(**{"%s__gt" % self.attname: last_month})
         
         months = [
-            (this_month, [0] * calendar.monthrange(this_month.year, this_month.month)[1]),
-            (last_month, [0] * calendar.monthrange(last_month.year, last_month.month)[1]),
+            [this_month, ([0] * calendar.monthrange(this_month.year, this_month.month)[1]), 0],
+            [last_month, ([0] * calendar.monthrange(last_month.year, last_month.month)[1]), 0],
         ]
         
         for data in qs.iterator():
@@ -99,6 +99,7 @@ class Histogram(object):
             else:
                 continue
             months[idx][1][data[self.attname].day-1] += data["num"]
+            months[idx][2] += data["num"]
         
         return {
             "results": months,

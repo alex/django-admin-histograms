@@ -4,9 +4,9 @@
 	</style>
 {% endif %}
 <p>During this time period there were {{ total }} entries.</p>
-{% for month, data in results %}
+{% for month, data, count in results %}
 	<div class="histogram">
-		<h2 style="padding-top: 1em;">{{ month|date:"F Y" }}</h2>
+		<h2 style="padding-top: 1em;">{{ month|date:"F Y" }} ({{ count }})</h2>
 		<ul>
 			{% for num in data %}
 				<li>
