@@ -3,75 +3,12 @@
 {% block extrastyle %}
     {{ block.super }}
     <style type="text/css">
-        .timeline { 
-            font-size: 0.75em; 
-            height: 10em; 
-          }
-
-        .timeline li { 
-            position: relative;
-            float: left;
-            width: 1.5em; 
-            margin: 0 0.1em;
-            height: 8em; 
-            list-style-type: none;    
-        }
-
-        .timeline li a { 
-            display: block;
-            height: 100%;  
-        }
-
-        .timeline li .label { 
-            display: block; 
-            position: absolute; 
-            bottom: -2em; 
-            left: 0; 
-            background: #fff; 
-            width: 100%; 
-            height: 2em; 
-            line-height: 2em; 
-            text-align: center;
-        }
-
-        .timeline li a .count { 
-            display: block; 
-            position: absolute; 
-            bottom: 0; 
-            left: 0; 
-            height: 0; 
-            width: 100%; 
-            background: #AAA; 
-            text-indent: -9999px; 
-            overflow: hidden; 
-        }
-
-        .timeline li:hover { 
-            background: #EFEFEF; 
-        }
-
-        .timeline li a:hover .count { 
-            background: #2D7BB2; 
-        }
+    {{ histogram.get_css }
     </style>
 {% endblock %}
 
 {% block content %}
     <p>During this time period there were {{ total }} whatevers.</p>
-    {% for month, data in results %}
-        <h2 style="padding-top: 1em;">{{ month|date:"F Y" }}</h2>
-        <ul class="timeline">
-            {% for num in data %}
-                <li>
-                    <a href="#" title="{{ num }}">
-                        <span class="label">{{ forloop.counter }}</span>
-                        <span class="count" style="height: {% widthratio num total 100 %}%">
-                            ({{ num }})
-                        </span>
-                    </a>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    {{ histogram.render }}
 {% endblock %}
 
