@@ -65,11 +65,12 @@ class Histogram(object):
         self.attname = attname
         self._queryset = None
     
-    def render(self):
+    def render(self, css=False):
         context = self.get_report(self.attname)
-        
+        if css:
+            context['css'] = HISTOGRAM_CSS
         return render_to_string("histogram/report.html", context)
-        
+    
     def get_query_set(self):
         return self._queryset or self.model.objects.all()
     
