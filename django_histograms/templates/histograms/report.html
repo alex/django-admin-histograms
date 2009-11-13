@@ -3,10 +3,12 @@
 	{{ css }}
 	</style>
 {% endif %}
-<p class="histogram-note">During this time period there were {{ total }} entries.</p>
-{% for month, data, count in results %}
+{% if results.1 %}
+	<p class="histogram-note">During this time period there were {{ total }} entries.</p>
+{% endif %}
+{% for label, data, count in results %}
 	<div class="histogram">
-		<h2 style="padding-top: 1em;">{{ month|date:"F Y" }} ({{ count }})</h2>
+		<h2 style="padding-top: 1em;">{{ label }} ({{ count }})</h2>
 		<ul>
 			{% for num in data %}
 				<li>

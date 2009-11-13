@@ -5,6 +5,9 @@ from django.template import RequestContext
 
 class HistogramAdmin(admin.ModelAdmin):
     histogram_field = None
+    histogram_months = 2
+    histogram_days = None
+    histogram_day_labels = True
     
     def get_urls(self):
         urlpatterns = patterns("",
@@ -16,7 +19,7 @@ class HistogramAdmin(admin.ModelAdmin):
     def report_view(self, request):
         assert self.histogram_field is not None, "Set histogram_field you idiot"
 
-        histogram = Histogram(self.model, self.histogram_field, self.queryset(request))
+        histogram = Histogram(self.model, self.histogram_field, self.queryset(request), months=self.histogram_months, days=histogram_days, day_labels=histogram_day_labels)
         
         context = {
             'title': "Histogram for %s" % self.model._meta.object_name,

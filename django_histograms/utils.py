@@ -59,12 +59,14 @@ HISTOGRAM_CSS = """
 }"""
 
 class Histogram(object):
-    def __init__(self, model, attname, queryset=None, months=2):
+    def __init__(self, model, attname, queryset=None, months=None, days=None):
         # `queryset` exists so it can work with the admin (bad idea?)
         self.model = model
         self.attname = attname
         self._queryset = None
+        assert(months or days, 'You must pass either months or days, not both.')
         self.months = months
+        self.days = days
     
     def render(self, css=False, day_labels=True):
         context = self.get_report()
@@ -81,27 +83,35 @@ class Histogram(object):
     
     def get_report(self):
         # XXX: this logic can probably be cleaned up
-        this_month = datetime.date.today().replace(day=1)
-        last_month = this_month
         months = {}
-        for m in range(0, self.months):
-            cur_month = last_month
-            months['%s.%s' % (last_month.month, last_month.year)] = [
-                last_month,
-                ([0] * calendar.monthrange(last_month.year, last_month.month)[1]),
-                0
-            ]
-            last_month = (last_month - datetime.timedelta(days=1)).replace(day=1)
-        
+        if self.months:
+            this_month = datetime.date.today().replace(day=1)
+            last_month = this_month
+            for m in range(0, self.months):
+                cutoff = last_month
+                months['%s.%s' % (last_month.month, last_month.year)] = [
+                    last_month,
+                    ([0] * calendar.monthrange(last_month.year, last_month.month)[1]),
+                    0
+                ]
+                last_month = (last_month - datetime.timedelta(days=1)).replace(day=1)
+            grouper = lambda x: '%s.%s' % (x.month, x.year)
+            day_grouper = lambda x: x.day-1
+        elif self.days:
+            cutoff = datetime.datetime.now()-datetime.timedelta(days=self.days)
+            grouper = lambda x: None
+            day_grouper = lambda x: (datetime.datetime.now()-x.day).days
+            months[None] = ['Last %s Days' % (self.days), ([0] * self.days), 0]
+            
         qs = self.get_query_set().values(self.attname).annotate(
             num=Count("pk")
-        ).filter(**{"%s__gt" % self.attname: cur_month})
+        ).filter(**{"%s__gt" % self.attname: cutoff})
         
         for data in qs.iterator():
-            idx = '%s.%s' % (data[self.attname].month, data[self.attname].year)
-            months[idx][1][data[self.attname].day-1] += data["num"]
+            idx = grouper(data[self.attname])
+            months[idx][1][day_grouper(data[self.attname])] += data["num"]
             months[idx][2] += data["num"]
-        
+        print months
         return {
             "results": months.values(),
             "total": sum(o for m in months.itervalues() for o in m[1]),
