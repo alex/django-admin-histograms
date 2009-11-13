@@ -17,7 +17,7 @@ class HistogramAdmin(admin.ModelAdmin):
     def report_view(self, request):
         assert self.histogram_field is not None, "Set histogram_field you idiot"
 
-        histogram = Histogram(self.model, self.queryset(request))
+        histogram = Histogram(self.model, self.histogram_field, self.queryset(request))
         
         context = {
             'title': "Histogram for %s" % self.model._meta.object_name,

@@ -59,13 +59,14 @@ HISTOGRAM_CSS = """
 }"""
 
 class Histogram(object):
-    def __init__(self, model, queryset=None):
+    def __init__(self, model, attname, queryset=None):
         # `queryset` exists so it can work with the admin (bad idea?)
         self.model = model
+        self.attname = attname
         self._queryset = None
     
-    def render(self, attname):
-        context = self.get_report(attname)
+    def render(self):
+        context = self.get_report(self.attname)
         
         return render_to_string("histogram/report.html", context)
         
@@ -75,12 +76,12 @@ class Histogram(object):
     def get_css(self):
         return mark_safe(HISTOGRAM_CSS)
     
-    def get_report(self, attname):
+    def get_report(self):
         this_month = datetime.date.today().replace(day=1)
         last_month = (this_month - datetime.timedelta(days=1)).replace(day=1)
-        qs = self.get_query_set().values(attname).annotate(
+        qs = self.get_query_set().values(self.attname).annotate(
             num=Count("pk")
-        ).filter(**{"%s__gt" % attname: last_month})
+        ).filter(**{"%s__gt" % self.attname: last_month})
         
         months = [
             (this_month, [0] * calendar.monthrange(this_month.year, this_month.month)[1]),
@@ -88,15 +89,15 @@ class Histogram(object):
         ]
         
         for data in qs.iterator():
-            if (this_month.month == data[attname].month and
-                this_month.year == data[attname].year):
+            if (this_month.month == data[self.attname].month and
+                this_month.year == data[self.attname].year):
                 idx = 0
-            elif (last_month.month == data[attname].month and
-                last_month.year == data[attname].year):
+            elif (last_month.month == data[self.attname].month and
+                last_month.year == data[self.attname].year):
                 idx = 1
             else:
                 continue
-            months[idx][1][data[attname].day-1] += data["num"]
+            months[idx][1][data[self.attname].day-1] += data["num"]
         
         return {
             "results": months,
