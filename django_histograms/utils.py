@@ -66,7 +66,7 @@ class Histogram(object):
         self._queryset = None
     
     def render(self, css=False):
-        context = self.get_report(self.attname)
+        context = self.get_report()
         if css:
             context['css'] = HISTOGRAM_CSS
         return render_to_string("histogram/report.html", context)
