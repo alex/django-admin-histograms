@@ -1,2 +1,3 @@
 *.pyc
 *.pyo
+/django_admin_histograms.egg-info
