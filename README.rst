@@ -10,3 +10,9 @@ URL as necessary).
 
 The designs came from Wilson Miner's article on data visualization for A List
 Apart.
+
+
+Using histograms in other pages
+===============================
+
+``{% histogram_for 'appname.Model' 'histogram_field' %}
