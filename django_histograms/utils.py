@@ -100,7 +100,7 @@ class Histogram(object):
         elif self.days:
             cutoff = datetime.datetime.now()-datetime.timedelta(days=self.days)
             grouper = lambda x: None
-            day_grouper = lambda x: (datetime.datetime.now()-x.day).days
+            day_grouper = lambda x: (datetime.datetime.now()-datetime.timedelta(days=x.day)).days
             months[None] = ['Last %s Days' % (self.days), ([0] * self.days), 0]
             
         qs = self.get_query_set().values(self.attname).annotate(
