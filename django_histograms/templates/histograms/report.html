@@ -1,11 +1,15 @@
 {% if css %}
 	<style type="text/css">
-	{{ css }}
+    	{{ css }}
 	</style>
 {% endif %}
+
 {% if results.1 %}
-	<p class="histogram-note">During this time period there were {{ total }} entries.</p>
+	<p class="histogram-note">
+	    During this time period there were {{ total }} entries.
+    </p>
 {% endif %}
+
 {% for label, data, count in results %}
 	<div class="histogram">
 		<h2 style="padding-top: 1em;">{{ label }} ({{ count }})</h2>

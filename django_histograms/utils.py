@@ -82,12 +82,11 @@ class Histogram(object):
         return mark_safe(HISTOGRAM_CSS)
     
     def get_report(self):
-        # XXX: this logic can probably be cleaned up
         months = {}
         if self.months:
             this_month = datetime.date.today().replace(day=1)
             last_month = this_month
-            for m in range(0, self.months):
+            for m in xrange(self.months):
                 cutoff = last_month
                 months['%s.%s' % (last_month.month, last_month.year)] = [
                     last_month,
@@ -98,9 +97,9 @@ class Histogram(object):
             grouper = lambda x: '%s.%s' % (x.month, x.year)
             day_grouper = lambda x: x.day-1
         elif self.days:
-            cutoff = datetime.datetime.now()-datetime.timedelta(days=self.days)
+            cutoff = datetime.datetime.now() - datetime.timedelta(days=self.days)
             grouper = lambda x: None
-            day_grouper = lambda x: (datetime.datetime.now()-x).days
+            day_grouper = lambda x: (datetime.datetime.now() - x).days
             months[None] = ['Last %s Days' % (self.days), ([0] * self.days), 0]
             
         qs = self.get_query_set().values(self.attname).annotate(
