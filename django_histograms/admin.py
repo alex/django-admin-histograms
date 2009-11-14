@@ -3,6 +3,8 @@ from django.contrib import admin
 from django.shortcuts import render_to_response
 from django.template import RequestContext
 
+from django_histograms.utils import Histogram
+
 
 class HistogramAdmin(admin.ModelAdmin):
     histogram_field = None
