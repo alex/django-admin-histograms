@@ -1,9 +1,9 @@
-from django_histograms.utils import Histogram
 from django import template
-from django.db.models import get_model
 
 from templatetag_sugar.register import tag
 from templatetag_sugar.parser import Name, Variable, Constant, Optional, Model
+
+from django_histograms.utils import Histogram
 
 
 register = template.Library()
