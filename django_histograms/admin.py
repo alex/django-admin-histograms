@@ -10,7 +10,6 @@ class HistogramAdmin(admin.ModelAdmin):
     histogram_field = None
     histogram_months = 2
     histogram_days = None
-    histogram_day_labels = True
     
     def get_urls(self):
         urlpatterns = patterns("",
@@ -24,7 +23,7 @@ class HistogramAdmin(admin.ModelAdmin):
 
         histogram = Histogram(self.model, self.histogram_field,
             self.queryset(request), months=self.histogram_months,
-            days=self.histogram_days, day_labels=self.histogram_day_labels)
+            days=self.histogram_days)
         
         context = {
             'title': "Histogram for %s" % self.model._meta.object_name,
