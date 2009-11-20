@@ -104,7 +104,7 @@ class Histogram(object):
             
         qs = self.get_query_set().values(self.attname).annotate(
             num=Count("pk")
-        ).filter(**{"%s__gt" % self.attname: cutoff})
+        ).filter(**{"%s__gt" % str(self.attname): cutoff})
         
         for data in qs.iterator():
             idx = grouper(data[self.attname])
