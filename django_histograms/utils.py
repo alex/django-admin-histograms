@@ -110,7 +110,6 @@ class Histogram(object):
             idx = grouper(data[self.attname])
             months[idx][1][day_grouper(data[self.attname])] += data["num"]
             months[idx][2] += data["num"]
-        print months
         return {
             "results": months.values(),
             "total": sum(o for m in months.itervalues() for o in m[1]),
