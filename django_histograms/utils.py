@@ -64,7 +64,7 @@ class Histogram(object):
         self.model = model
         self.attname = attname
         self._queryset = None
-        assert(months or days, 'You must pass either months or days, not both.')
+        assert months or days, 'You must pass either months or days, not both.'
         self.months = months
         self.days = days
     
