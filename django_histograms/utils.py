@@ -110,7 +110,13 @@ class Histogram(object):
             idx = grouper(data[self.attname])
             months[idx][1][day_grouper(data[self.attname])] += data["num"]
             months[idx][2] += data["num"]
+
+        total = sum(o for m in months.itervalues() for o in m[1])
+        max_num = max(o for m in months.itervalues() for o in m[1])
+        ratio = total / max_num * 100
+
         return {
             "results": months.values(),
-            "total": sum(o for m in months.itervalues() for o in m[1]),
+            "total": total,
+            "ratio": ratio
         }
