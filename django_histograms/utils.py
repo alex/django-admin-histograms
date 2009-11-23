@@ -113,7 +113,10 @@ class Histogram(object):
 
         total = sum(o for m in months.itervalues() for o in m[1])
         max_num = max(o for m in months.itervalues() for o in m[1])
-        ratio = total / max_num * 100
+        if not (total and max_num):
+            ratio = 0
+        else:
+            ratio = total / max_num * 100
 
         return {
             "results": months.values(),
