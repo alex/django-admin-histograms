@@ -64,7 +64,7 @@ class Histogram(object):
         self.model = model
         self.attname = attname
         self._queryset = None
-        assert(months or days, 'You must pass either months or days, not both.')
+        assert months or days, 'You must pass either months or days, not both.'
         self.months = months
         self.days = days
     
@@ -104,14 +104,22 @@ class Histogram(object):
             
         qs = self.get_query_set().values(self.attname).annotate(
             num=Count("pk")
-        ).filter(**{"%s__gt" % self.attname: cutoff})
+        ).filter(**{"%s__gt" % str(self.attname): cutoff})
         
         for data in qs.iterator():
             idx = grouper(data[self.attname])
             months[idx][1][day_grouper(data[self.attname])] += data["num"]
             months[idx][2] += data["num"]
-        print months
+
+        total = sum(o for m in months.itervalues() for o in m[1])
+        max_num = max(o for m in months.itervalues() for o in m[1])
+        if not (total and max_num):
+            ratio = 0
+        else:
+            ratio = total / max_num * 100
+
         return {
             "results": months.values(),
-            "total": sum(o for m in months.itervalues() for o in m[1]),
+            "total": total,
+            "ratio": ratio
         }

@@ -18,4 +18,4 @@ Using histograms in other pages
 You can use the built-in ``histogram_for`` template tag::
 
     {% load histograms %}
-    {% histogram_for 'appname.Model' 'histogram_field' %}
+    {% histogram_for appname.Model 'histogram_field' 1 1 %}
