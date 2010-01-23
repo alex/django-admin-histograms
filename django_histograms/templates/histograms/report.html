@@ -1,31 +1,31 @@
 {% if css %}
-	<style type="text/css">
-    	{{ css }}
-	</style>
+    <style type="text/css">
+        {{ css }}
+    </style>
 {% endif %}
 
 {% if results.1 %}
-	<p class="histogram-note">
-	    During this time period there were {{ total }} entries.
+    <p class="histogram-note">
+        During this time period there were {{ total }} entries.
     </p>
 {% endif %}
 
 {% for label, data, count in results %}
-	<div class="histogram">
-		<h2 style="padding-top: 1em;">{{ label }} ({{ count }})</h2>
-		<ul>
-			{% for num in data %}
-				<li>
-					<a href="#" title="{{ num }}">
-						{% if day_labels %}
-							<span class="label">{{ forloop.counter }}</span>
-						{% endif %}
-						<span class="count" style="height: {% widthratio num total 100 %}%">
-							({{ num }})
-						</span>
-					</a>
-				</li>
-			{% endfor %}
-		</ul>
-	</div>
+    <div class="histogram">
+        <h2 style="padding-top: 1em;">{{ label }} ({{ count }})</h2>
+        <ul>
+            {% for num in data %}
+                <li>
+                    <a href="#" title="{{ num }}">
+                        {% if day_labels %}
+                            <span class="label">{{ forloop.counter }}</span>
+                        {% endif %}
+                        <span class="count" style="height: {% widthratio num total 100 %}%">
+                            ({{ num }})
+                        </span>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
 {% endfor %}
